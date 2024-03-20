@@ -1,0 +1,16 @@
+{
+  "name": "mern-stack-full-ecommerce-site",
+  "version": "1.0.0",
+  "description": "full ecommerce site using mern",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Prince Tobit",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "mongoose": "^8.2.2"
+  }
+}
