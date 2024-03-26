@@ -1,7 +1,11 @@
 //erro handler class
 class ErrorHandler extends Error {
-     constructor(message, errorCode){
+     constructor(message, statusCode){
         super(message);
-        this.statusCode = errorCode;
+        this.statusCode = statusCode;
+
+        Error.captureStackTrace(this, this.constructor)
      }
 }
+
+module.exports = ErrorHandler;
