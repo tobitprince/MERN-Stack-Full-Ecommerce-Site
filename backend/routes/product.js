@@ -13,14 +13,14 @@ const {
 const { isAuthenitcatedUser } = require('../middlewares/auth');
 
 
-router.route('/products').get( isAuthenitcatedUser ,getProducts);
+router.route('/products').get( getProducts);
 
 router.route('/product/:id').get(getSingleProduct);
 
-router.route('/admin/product/new').post(newProduct);
+router.route('/admin/product/new').post(isAuthenitcatedUser, newProduct);
 
 router.route('/admin/product/:id')
-                                .put(updateProduct)
-                                .delete(deleteProduct);
+                                .put(isAuthenitcatedUser,updateProduct)
+                                .delete(isAuthenitcatedUser,deleteProduct);
 
 module.exports = router;
