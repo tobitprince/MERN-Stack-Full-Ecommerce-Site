@@ -178,3 +178,65 @@ exports.logout = catchAsyncErrors(async ( req, res, next) => {
         message: 'Logged Out'
     })
 })
+
+//Admin Routes
+//get all users => /api/v1/admin/users
+exports.allUsers = catchAsyncErrors( async (req, res, next) => {
+    const users = await User.find();
+
+    res.status(200).json({
+        success: true,
+        users
+    })
+})
+
+//get user details => /api/v1/admin/user/:id
+exports.getUserDetails = catchAsyncErrors( async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if(!user) {
+        return next(new ErrorHandler(`User with the given id does not exist: ${req.params.id}`))
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    })
+})
+
+//update user profile => /api/v1/admin/user/:id
+exports.updateUser = catchAsyncErrors( async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email
+    }
+
+    //update avatar: TODO
+
+    const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+    })
+
+    res.status(200).json({
+        success: true
+    })
+})
+
+//delete user => /api/v1/admin/user/:id
+exports.deleteUser = catchAsyncErrors( async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if(!user) {
+        return next(new ErrorHandler(`User with the given id does not exist: ${req.params.id}`))
+    }
+
+    //remove avatar: TODO
+
+    await user.deleteOne();
+
+    res.status(200).json({
+        success: true
+    })
+})
