@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
 
     },
     avatar: {
-        publid_id: {
+        public_id: {
             type: String,
             required: true
         },
