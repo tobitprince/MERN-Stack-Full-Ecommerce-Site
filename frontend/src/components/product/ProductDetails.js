@@ -13,6 +13,7 @@ import ListReviews from '../review/ListReviews';
 
 import { useDispatch, useSelector } from 'react-redux'
 import { getProductDetails, clearErrors, newReview } from '../../actions/productActions'
+import { addItemToCart } from '../../actions/cartActions'
 import { NEW_REVIEW_RESET } from '../../constants/productConstants'
 const ProductDetails = () => {
     const dispatch = useDispatch();
@@ -56,7 +57,10 @@ const ProductDetails = () => {
         const qty = count.valueAsNumber - 1;
         setQuantity(qty)
     }
-    
+    const addToCart = () => {
+        dispatch(addItemToCart(id, quantity));
+        // alert.success('Item Added to Cart')
+    }
     function setUserRatings() {
         const stars = document.querySelectorAll('.star');
         stars.forEach((star, index) => {
@@ -125,7 +129,7 @@ const ProductDetails = () => {
 
                             <hr />
 
-                            <p id="product_price">${product.price}</p>
+                            <p id="product_price">KES {product.price}</p>
                             <div className="stockCounter d-inline">
                                 <span className="btn btn-danger minus" onClick={decreaseQty}>-</span>
 
@@ -133,7 +137,7 @@ const ProductDetails = () => {
 
                                 <span className="btn btn-primary plus" onClick={increaseQty}>+</span>
                             </div>
-                            <button type="button" id="cart_btn" className="btn btn-primary d-inline ml-4" onClick="#" >Add to Cart</button>
+                            <button type="button" id="cart_btn" className="btn btn-primary d-inline ml-4" onClick={addToCart} >Add to Cart</button>
                             <hr />
                             <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'} >{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></p>
 

@@ -1,5 +1,5 @@
 const Product = require('../models/product');
-
+const Order = require('../models/order')
 const ErrorHandler = require('../utils/errorHandler');
 
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
@@ -165,3 +165,59 @@ exports.deleteReview = catchAsyncErrors ( async (req, res, next) => {
         success: true
     })
 })
+
+exports.getAdminProducts = async (req, res, next) => {
+    const products = await Product.find();
+    res.status(200).json({
+        success: true,
+        products
+    })
+}
+
+exports.productSales = async (req, res, next) => {
+    const totalSales = await Order.aggregate([
+        {
+            $group: {
+                _id: null,
+                total: { $sum: "$itemsPrice" }
+
+            },
+        },
+    ])
+    const sales = await Order.aggregate([
+        { $project: { _id: 0, "orderItems": 1, totalPrice: 1 } },
+        { $unwind: "$orderItems" },
+        {
+            $group: {
+                // _id: {month: { $month: "$paidAt" } },
+                _id: { product: "$orderItems.name" },
+                // total: {$sum: {$multiply: [ "$orderItemsprice", "$orderItemsquantity" ]}}
+                total: { $sum: { $multiply: ["$orderItems.price", "$orderItems.quantity"] } }
+            },
+        },
+    ])
+    
+    if (!totalSales) {
+        return next(new ErrorHandler('error sales ', 404))
+    }
+    if (!sales) {
+        return next(new ErrorHandler('error sales ', 404))
+    }
+    let totalPercentage = {}
+    totalPercentage = sales.map(item => {
+         
+        console.log( ((item.total/totalSales[0].total) * 100).toFixed(2))
+        percent = Number (((item.total/totalSales[0].total) * 100).toFixed(2))
+        total =  {
+            name: item._id.product,
+            percent
+        }
+        return total
+    }) 
+    // return console.log(totalPercentage)
+    res.status(200).json({
+        success: true,
+        totalPercentage,
+    })
+
+}

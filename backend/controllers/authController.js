@@ -16,7 +16,7 @@ exports.registerUser = catchAsyncErrors ( async (req, res ,next) => {
         password,
         avatar: {
             public_id: 'dwedw',
-            url: 'dwedwe'
+            url: '/images/default_avatar'
         }
     })
 
