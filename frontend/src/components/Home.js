@@ -1,4 +1,6 @@
 import React, { Fragment, useEffect } from 'react'
+import { toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 import MetaData from './layout/MetaData'
 import Product from './product/Product'
@@ -12,9 +14,17 @@ const Home = () => {
 
     const { loading, products, error, productsCount } = useSelector(state => state.products)
 
+    const notify = (error = '') => toast.error(error, {
+        position: toast.POSITION.BOTTOM_CENTER
+    });
+
     useEffect(() => {
+        if(error){
+			// return alert.error(error)
+            notify(error)
+		}
         dispatch(getProducts())
-    }, [dispatch])
+    }, [dispatch, error]);
 
   return (
     <Fragment>
